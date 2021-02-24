@@ -1,22 +1,32 @@
+import { videos } from "../db";
+import routes from "../routes";
+
 // Router의 callback 함수
 export const home = (req, res) => {
-  return res.send("Home");
+  res.render("home", { pageTitle: "Home", videos });
 };
 export const search = (req, res) => {
-  return res.send("Search");
+  const {
+    query: { term: searchingBy },
+  } = req;
+  res.render("search", { pageTitle: "Search", searchingBy, videos });
 };
-export const videos = (req, res) => {
-  return res.send("Search");
+export const getUpload = (req, res) => {
+  res.render("upload", { pageTitle: "Upload" });
 };
-export const upload = (req, res) => {
-  return res.send("Upload Video");
+export const postUpload = (req, res) => {
+  const {
+    body: { file, title, description },
+  } = req;
+  // To Do: Upload and save video
+  res.redirect(routes.videoDetail(324393));
 };
 export const videoDetail = (req, res) => {
-  return res.send("Video Detail");
+  res.render("videoDetail", { pageTitle: "Video Detail" });
 };
 export const editVideo = (req, res) => {
-  return res.send("Edit Video");
+  res.render("editVideo", { pageTitle: "Edti Video" });
 };
 export const deleteVideo = (req, res) => {
-  return res.send("Delete Video");
+  res.render("deleteVideo", { pageTitle: "Delete Video" });
 };
