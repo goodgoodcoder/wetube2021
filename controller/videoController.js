@@ -4,7 +4,7 @@ import Video from "../models/Video";
 // Router의 callback 함수
 export const home = async (req, res) => {
   try {
-    const videos = await Video.find({}); // db의 Video를 모두 불러옴
+    const videos = await Video.find({}).sort({ _id: -1 }); // db의 Video를 모두 불러옴
     res.render("home", { pageTitle: "Home", videos });
   } catch (error) {
     res.render("home", { pageTitle: "Home", videos: [] });
@@ -77,6 +77,8 @@ export const deleteVideo = async (req, res) => {
   } = req;
   try {
     await Video.findByIdAndDelete(id);
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
   res.redirect(routes.home);
 };
