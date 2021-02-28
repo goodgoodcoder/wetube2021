@@ -1,14 +1,27 @@
 import routes from "../routes";
+import Video from "../models/Video";
 
 // Router의 callback 함수
-export const home = (req, res) => {
-  res.render("home", { pageTitle: "Home", videos });
+export const home = async (req, res) => {
+  try {
+    const videos = await Video.find({}); // db의 Video를 모두 불러옴
+    res.render("home", { pageTitle: "Home", videos });
+  } catch (error) {
+    console.log(error);
+    res.render("home", { pageTitle: "Home", videos: [] });
+  }
 };
-export const search = (req, res) => {
+export const search = async (req, res) => {
   const {
     query: { term: searchingBy },
   } = req;
-  res.render("search", { pageTitle: "Search", searchingBy, videos });
+  try {
+    const videos = await Video.find({}); // db의 Video를 모두 불러옴
+    res.render("search", { pageTitle: "Search", searchingBy, videos });
+  } catch (error) {
+    console.log(error);
+    res.render("search", { pageTitle: "Search", searchingBy, videos: [] });
+  }
 };
 export const getUpload = (req, res) => {
   res.render("upload", { pageTitle: "Upload" });
