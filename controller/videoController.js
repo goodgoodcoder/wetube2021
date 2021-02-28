@@ -1,4 +1,3 @@
-import { videos } from "../db";
 import routes from "../routes";
 
 // Router의 callback 함수
