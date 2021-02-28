@@ -7,6 +7,7 @@ export const home = async (req, res) => {
     const videos = await Video.find({}).sort({ _id: -1 }); // db의 Video를 모두 불러옴
     res.render("home", { pageTitle: "Home", videos });
   } catch (error) {
+    console.log(error);
     res.render("home", { pageTitle: "Home", videos: [] });
   }
 };
@@ -14,12 +15,16 @@ export const search = async (req, res) => {
   const {
     query: { term: searchingBy },
   } = req;
+  let videos = [];
   try {
-    const videos = await Video.find({}); // db의 Video를 모두 불러옴
-    res.render("search", { pageTitle: "Search", searchingBy, videos });
+    videos = await Video.find({
+      title: { $regex: searchingBy, $options: "i" },
+    }); // db의 Video를 모두 불러옴
+    console.log(videos);
   } catch (error) {
-    res.render("search", { pageTitle: "Search", searchingBy, videos: [] });
+    console.log(error);
   }
+  res.render("search", { pageTitle: "Search", searchingBy, videos });
 };
 export const getUpload = (req, res) => {
   res.render("upload", { pageTitle: "Upload" });
