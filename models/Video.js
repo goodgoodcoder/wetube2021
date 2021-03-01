@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-// DB에 저장될 파일의 형태(틀) : Class 와 비슷
+// DB에 저장될 파일의 형태(틀)
 const VideoSchema = new mongoose.Schema({
   fileUrl: {
     type: String,
