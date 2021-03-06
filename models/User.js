@@ -7,8 +7,21 @@ const UserSchema = new mongoose.Schema({
   avatarUrl: String,
   facebookId: Number,
   githubId: Number,
+  videos: [
+    {
+      type: mongoose.Schema.Types.ObjectId, //Video Object의 ID
+      ref: "Video", //Video model
+    },
+  ],
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId, //Comment Object의 ID
+      ref: "Comment", //Comment model
+    },
+  ],
 });
 
+// https://www.npmjs.com/package/passport-local-mongoose
 UserSchema.plugin(passportLocalMongoose, { usernameField: "email" });
 
 const model = mongoose.model("User", UserSchema);

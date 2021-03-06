@@ -20,7 +20,6 @@ export const search = async (req, res) => {
     videos = await Video.find({
       title: { $regex: searchingBy, $options: "i" },
     }); // db의 Video를 모두 불러옴
-    console.log(videos);
   } catch (error) {
     console.log(error);
   }
@@ -33,13 +32,17 @@ export const postUpload = async (req, res) => {
   const {
     body: { title, description },
     file: { path },
+    user,
   } = req;
   // db에 새로운 파일을 생성(저장)
   const newVideo = await Video.create({
     fileUrl: path,
     title,
     description,
+    creator: user.id,
   });
+  user.videos.push(newVideo.id);
+  user.save();
   res.redirect(routes.videoDetail(newVideo.id));
 };
 export const videoDetail = async (req, res) => {
@@ -47,7 +50,7 @@ export const videoDetail = async (req, res) => {
     params: { id },
   } = req;
   try {
-    const video = await Video.findById(id);
+    const video = await Video.findById(id).populate("creator");
     res.render("videoDetail", { pageTitle: video.title, video });
   } catch (error) {
     res.redirect(routes.home);
@@ -59,7 +62,11 @@ export const getEditVideo = async (req, res) => {
   } = req;
   try {
     const video = await Video.findById(id);
-    res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
+    if (video.creator.toString() !== req.user.id) {
+      throw Error();
+    } else {
+      res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
+    }
   } catch (error) {
     res.redirect(routes.home);
   }
@@ -81,7 +88,12 @@ export const deleteVideo = async (req, res) => {
     params: { id },
   } = req;
   try {
-    await Video.findByIdAndDelete(id);
+    const video = await Video.findById(id);
+    if (video.creator.toString() !== req.user.id) {
+      throw Error();
+    } else {
+      await Video.findByIdAndDelete(id);
+    }
   } catch (error) {
     console.log(error);
   }
