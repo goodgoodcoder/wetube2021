@@ -32,12 +32,12 @@ export const getUpload = (req, res) => {
 export const postUpload = async (req, res) => {
   const {
     body: { title, description },
-    file: { path },
+    file: { location },
     user,
   } = req;
   // db에 새로운 파일을 생성(저장)
   const newVideo = await Video.create({
-    fileUrl: path,
+    fileUrl: location,
     title,
     description,
     creator: user.id,
@@ -92,15 +92,16 @@ export const deleteVideo = async (req, res) => {
   } = req;
   try {
     const video = await Video.findById(id);
-    if (video.creator.toString() !== req.user.id) {
+    if (JSON.stringify(video.creator) !== JSON.stringify(req.user.id)) {
       throw Error();
     } else {
-      await Video.findByIdAndDelete(id);
+      await Video.findOneAndRemove({ _id: id });
     }
   } catch (error) {
     console.log(error);
+  } finally {
+    res.redirect(routes.home);
   }
-  res.redirect(routes.home);
 };
 
 // API
