@@ -1,8 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import "core-js";
-import "@babel/polyfill";
 import express from "express";
 import morgan from "morgan";
 import bodyParser from "body-parser";
