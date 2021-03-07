@@ -13,6 +13,7 @@ import session from "express-session";
 import { localsMiddleware } from "./middlewares.js";
 import userRouter from "./routers/userRouter.js";
 import videoRouter from "./routers/videoRouter.js";
+import apiRouter from "./routers/apiRouter.js";
 import globalRouter from "./routers/globalRouter.js";
 import routes from "./routes";
 import "./passport";
@@ -49,6 +50,7 @@ app.use(localsMiddleware); // local 변수를 global 변수로 사용
 /* Router */
 app.use(routes.home, globalRouter);
 app.use(routes.users, userRouter);
+app.use(routes.api, apiRouter);
 app.use(routes.videos, videoRouter);
 
 export default app;
