@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import "core-js";
+import "@babel/polyfill";
 import express from "express";
 import morgan from "morgan";
 import bodyParser from "body-parser";
@@ -10,6 +11,7 @@ import helmet from "helmet";
 import MongoStore from "connect-mongo";
 import passport from "passport";
 import session from "express-session";
+import path from "path";
 import { localsMiddleware } from "./middlewares.js";
 import userRouter from "./routers/userRouter.js";
 import videoRouter from "./routers/videoRouter.js";
@@ -27,8 +29,9 @@ app.use(
   })
 ); // 기초 보안
 app.set("view engine", "pug"); // Express의 view-engine을 pug로 설정
-app.use("/uploads", express.static("uploads")); // /uploads이라는 route로 접근하면 view나 controller를 확인하는 것이 아니라 uploads 디렉토리로 접근
-app.use("/static", express.static("static")); // /static이라는 route 접근하면 view나 controller를 확인하는 것이 아니라 static 디렉토리로 접근
+app.set("views", path.join(__dirname, "views"));
+// app.use("/uploads", express.static("uploads")); // /uploads이라는 route로 접근하면 view나 controller를 확인하는 것이 아니라 uploads 디렉토리로 접근
+app.use("/static", express.static(path.join(__dirname, "static"))); // /static이라는 route 접근하면 view나 controller를 확인하는 것이 아니라 static 디렉토리로 접근
 app.use(cookieParser()); // Cookie Control
 app.use(bodyParser.json()); // 서버가 body로부터 정보를 받아올 수 있음: ex) json 데이터를 받아와서 이해
 app.use(bodyParser.urlencoded({ extended: true })); // 서버가 body로부터 정보를 받아올 수 있음: ex) Form 데이터를 서버에 의해 받아 활용가능
